@@ -18,7 +18,6 @@ print("second passage id: " + str(passage_ids[1]))
 print("Encoding passages...")
 passage_embeddings = model.encode(passage_texts, show_progress_bar=True)
 
-# Ensure embeddings are in float32 (required by FAISS)
 passage_embeddings = np.array(passage_embeddings, dtype=np.float32)
 
 output_embeddings_path = 'D:\\diplom\\shared\\new_passage_embeddings.npy'
@@ -26,17 +25,14 @@ output_ids_path = 'D:\\diplom\\shared\\new_passage_ids.npy'
 
 np.save(output_embeddings_path, passage_embeddings)
 np.save(output_ids_path, passage_ids)
-# Create a FAISS index
-dimension = passage_embeddings.shape[1]  # The embedding dimension
-index = faiss.IndexFlatL2(dimension)  # L2 distance for similarity
 
-# Wrap the index with an ID mapping
+dimension = passage_embeddings.shape[1]
+index = faiss.IndexFlatL2(dimension)
+
 index_with_ids = faiss.IndexIDMap(index)
 
-# Add embeddings with IDs to the index
 index_with_ids.add_with_ids(passage_embeddings, passage_ids)
 
-# Save the FAISS index to disk
 faiss_index_path = 'D:\\diplom\\shared\\faiss_index_with_ids'
 faiss.write_index(index_with_ids, faiss_index_path)
 
