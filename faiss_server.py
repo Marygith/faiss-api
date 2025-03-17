@@ -5,9 +5,9 @@ import numpy as np
 
 app = Flask(__name__)
 
-model = SentenceTransformer('msmarco-distilbert-base-v3')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
-index = faiss.read_index('D:\\diplom\\data\\faiss_index_with_ids')
+index = faiss.read_index('D:\\diplom\\data_v2\\faiss_index_with_ids')
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -58,7 +58,7 @@ def get_similarity_scores():
                 # Ensure the passage_vector is a valid list of floats
                 passage_embedding = np.array(passage_vector, dtype=np.float32)
 
-                if passage_embedding.shape != (768,):
+                if passage_embedding.shape != (384,):
                     raise ValueError(f"Invalid vector shape for doc_id {doc_id}, vector shape is {passage_embedding.shape}")
 
                 # Calculate the L2 distance
